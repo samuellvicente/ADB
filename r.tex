@@ -184,76 +184,76 @@ ALTER TABLE CurrentAccount ADD CONSTRAINT FKCurrentAcc16041 FOREIGN KEY (Account
 \end{lstlisting}
 
 \section{Transactions}
-\subsection{1:Description}
-Theres one CurrentAccount in the system. This transaction withdraws 100 units from that account and register it in the Withdraw ledger table, it also checks if the amount is permitted as by the CurrentAccount.MaximumWithdraw.
 
-\subsection{1:Input}
+\subsection{1:Changing Query}
+\subsubsection{Description}
+There is 5 CurrentAccount in the system. This transaction doubles the amount of the account that has the biggest value in the database.
+
+\subsubsection{Input}
+\subsubsection{Output}
+
+\subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
+BEGIN TRANSACTION
+UPDATE Account 
+SET amount = amount*2 
+WHERE AccountID = (
+    SELECT AccountID 
+    FROM Costumer c 
+    INNER JOIN Person p 
+        ON p.GovID = c.PersonGovID 
+    INNER JOIN Account 
+        ON CostumerID = CostumerCostumerID 
+    INNER JOIN CurrentAccount 
+        ON AccountAccountID = AccountID 
+    WHERE amount >= ALL(
+        SELECT MAX(amount) 
+        FROM Account 
+    )
+);
+COMMIT
 \end{lstlisting}
 
-\subsection{1:Output}
+\subsection{2:Changing Query}
+\subsubsection{Description}
+This transaction preforms a withdraw of 100 units on the CurrentAccount with the AccountAccountID 1. To do this we must first check if the amount we want to withdraw is smaller than the CurrentAccount MaximumWithdraw, after that we update the amount and add an entry to the Withdraw ledger.
 
-\subsection{1:SQL}
+\subsubsection{Input}
+\subsubsection{Output}
+
+\subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
+BEGIN TRANSACTION
+UPDATE Account
+SET amount =
+    CASE 
+        WHEN 100<(
+            SELECT MaximumWithdraw 
+            FROM CurrentAccount 
+            WHERE AccountAccountID=1) 
+          THEN amount - 100
+        ELSE amount
+    END
+WHERE AccountID=(
+    SELECT AccountAccountID 
+    FROM CurrentAccount INNER JOIN Account 
+        ON AccountID=AccountAccountID 
+    WHERE AccountAccountID=1);
+
+UPDATE Account
+SET EndDate =
+    CASE 
+        WHEN amount=0 THEN CURRENT_DATE
+        ELSE null
+    END
+WHERE AccountID = (
+    SELECT AccountAccountID 
+    FROM CurrentAccount INNER JOIN Account 
+        ON AccountID=AccountAccountID 
+    WHERE AccountAccountID=1);
+
+INSERT INTO Withdraw(WithdrawDate, Amount, CurrentAccountAccountID) VALUES(CURRENT_DATE, 100, 1);
+COMMIT
 \end{lstlisting}
 
-\subsection{2:Description}
-
-\subsection{2:Input}
-
-\subsection{2:Output}
-
-\subsection{2:SQL}
-\begin{lstlisting}[language=SQL]
-\end{lstlisting}
-
-\subsection{3:Description}
-
-\subsection{3:Input}
-
-\subsection{3:Output}
-
-\subsection{3:SQL}
-\begin{lstlisting}[language=SQL]
-\end{lstlisting}
-
-\subsection{4:Description}
-
-\subsection{4:Input}
-
-\subsection{4:Output}
-
-\subsection{4:SQL}
-\begin{lstlisting}[language=SQL]
-\end{lstlisting}
-
-\subsection{5:Description}
-
-\subsection{5:Input}
-
-\subsection{5:Output}
-
-\subsection{5:SQL}
-\begin{lstlisting}[language=SQL]
-\end{lstlisting}
-
-\subsection{6:Description}
-
-\subsection{6:Input}
-
-\subsection{6:Output}
-
-\subsection{6:SQL}
-\begin{lstlisting}[language=SQL]
-\end{lstlisting}
-
-\subsection{7:Description}
-
-\subsection{7:Input}
-
-\subsection{7:Output}
-
-\subsection{7:SQL}
-\begin{lstlisting}[language=SQL]
-\end{lstlisting}
 \end{document}

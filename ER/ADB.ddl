@@ -1,5 +1,5 @@
 CREATE TABLE Person (
-  GovID       number(19) GENERATED AS IDENTITY, 
+  GovID       number(19), 
   Name        varchar2(255) NOT NULL, 
   PhoneNumber varchar2(255) NOT NULL UNIQUE, 
   Email       varchar2(255) NOT NULL, 
