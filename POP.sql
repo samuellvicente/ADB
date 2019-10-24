@@ -10,23 +10,28 @@ INSERT INTO Costumer(PersonGovID) VALUES ('10243242');
 INSERT INTO Costumer(PersonGovID) VALUES ('10295329');
 INSERT INTO Costumer(PersonGovID) VALUES ('10265439');
 
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('1', '3000', to_date('21-01-2001','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('2', '4000', to_date('11-03-2002','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('3', '2000', to_date('02-07-2007','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('4', '1000', to_date('06-03-2003','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('5', '300', to_date('09-11-2011','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('1', '3000', to_date('21-01-2001','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('2', '4000', to_date('11-03-2002','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('3', '2000', to_date('02-07-2007','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('4', '1000', to_date('06-03-2003','DD-MM-YYYY'), null);
-INSERT INTO Account(CostumerCostumerID, Amount, BeginDate, EndDate) VALUES ('5', '300', to_date('09-11-2011','DD-MM-YYYY'), null);
+INSERT INTO Branch(BranchID, Address) VALUES ('Avenida da Liberdade, Lisboa');
+INSERT INTO Branch(BranchID, Address) VALUES ('Rua Da Prata, Lisboa');
+INSERT INTO Branch(BranchID, Address) VALUES ('Trianam, Las Palmas');
+INSERT INTO Branch(BranchID, Address) VALUES ('Edwarda Wittiga, Wroclaw');
+
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('1', '1', '3000', to_date('21-01-2001','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('2', '2', '4000', to_date('11-03-2002','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('3', '3', '2000', to_date('02-07-2007','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('4', '4', '1000', to_date('06-03-2003','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('5', '1', '300', to_date('09-11-2011','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('1', '1', '3000', to_date('21-01-2001','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('2', '2', '4000', to_date('11-03-2002','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('3', '3', '2000', to_date('02-07-2007','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('4', '4', '1000', to_date('06-03-2003','DD-MM-YYYY'), null);
+INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('5', '1', '300', to_date('09-11-2011','DD-MM-YYYY'), null);
 
 
 INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('1', 'ContaCorrent1', '50');
 INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('2', 'ContaCorrent2', '100');
 INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('3', 'ContaCorrent3', '200');
 INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('4', 'ContaCorrent4', '300');
-INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('5', 'ContaCorrent5',null);
+INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('5', 'ContaCorrent5', null);
 
 
 INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('6', '0.05', 'S', '10');
@@ -36,5 +41,9 @@ INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, Durat
 INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('10', '0.05', 'S', '10');
 
 
-INSERT INTO Tranfer(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('10', '0.05', 'S', '10');
+INSERT INTO Loan(BranchBranchID, Amount, InterestRate, DateOfCompletion, DateOfCreation) VALUES ('10', '0.05', 'S', '10');
+INSERT INTO Loan(BranchBranchID, Amount, InterestRate, DateOfCompletion, DateOfCreation) VALUES ('10', '0.05', 'S', '10');
+INSERT INTO Loan(BranchBranchID, Amount, InterestRate, DateOfCompletion, DateOfCreation) VALUES ('10', '0.05', 'S', '10');
+INSERT INTO Loan(BranchBranchID, Amount, InterestRate, DateOfCompletion, DateOfCreation) VALUES ('10', '0.05', 'S', '10');
+INSERT INTO Loan(BranchBranchID, Amount, InterestRate, DateOfCompletion, DateOfCreation) VALUES ('10', '0.05', 'S', '10');
 
