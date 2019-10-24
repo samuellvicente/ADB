@@ -29,8 +29,12 @@ INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('4',
 INSERT INTO CurrentAccount(AccountAccountID, Name, MaximumWithdraw) VALUES ('5', 'ContaCorrent5',null);
 
 
-INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('6', '2.5', 'S', '10')
-INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('7', '2.5', 'S', '10')
-INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('8', '2.5', 'S', '10')
-INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('9', '2.5', 'S', '10')
-INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('10', '2.5', 'S', '10')
+INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('6', '0.05', 'S', '10');
+INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('7', '0.05', 'S', '10');
+INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('8', '0.05', 'S', '10');
+INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('9', '0.05', 'S', '10');
+INSERT INTO SavingsAccount(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('10', '0.05', 'S', '10');
+
+
+INSERT INTO Tranfer(AccountAccountID, InterestRate, TypeOfInterest, DurationYears) VALUES ('10', '0.05', 'S', '10');
+

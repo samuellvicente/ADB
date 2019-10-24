@@ -14,7 +14,7 @@ CREATE TABLE Costumer (
 CREATE TABLE Employee (
   EmployeeID  number(19) GENERATED AS IDENTITY, 
   PersonGovID number(19) NOT NULL, 
-  Bonus       number(3, 5) NOT NULL CHECK(Bonus>=0), 
+  Bonus       number(10, 5) NOT NULL CHECK(Bonus>=0), 
   SickDays    number(10) NOT NULL CHECK(SickDays<10), 
   PRIMARY KEY (EmployeeID));
 CREATE TABLE Account (
@@ -45,7 +45,7 @@ CREATE TABLE Role (
 CREATE TABLE Loan (
   LoanID           number(19) GENERATED AS IDENTITY, 
   Amount           number(19, 2) NOT NULL CHECK(Amount>0), 
-  InterestRate     number(3, 5) NOT NULL, 
+  InterestRate     number(10, 5) NOT NULL, 
   DateOfCompletion date NOT NULL, 
   DateOfCreation   date NOT NULL, 
   BranchBranchId   number(19) NOT NULL, 
@@ -59,7 +59,7 @@ CREATE TABLE Payment (
   PRIMARY KEY (PaymentID));
 CREATE TABLE SavingsAccount (
   AccountAccountID number(19) NOT NULL, 
-  InterestRate     number(3, 5) NOT NULL CHECK(InterestRate>0), 
+  InterestRate     number(10, 5) NOT NULL CHECK(InterestRate>0), 
   TypeOfInterest   varchar2(255) NOT NULL, 
   DurationYears    number(10) NOT NULL CHECK(DurationYears>0), 
   PRIMARY KEY (AccountAccountID));
@@ -69,7 +69,7 @@ CREATE TABLE Deposit (
   Amount           number(19, 2) NOT NULL CHECK(Amount>0), 
   AccountAccountID number(19) NOT NULL, 
   PRIMARY KEY (DepositID));
-CREATE TABLE Tranfer (
+CREATE TABLE Transfer (
   TransferID        number(19) GENERATED AS IDENTITY, 
   TransferDate      date NOT NULL, 
   Amount            number(19, 2) NOT NULL CHECK(Amount>0), 
@@ -97,8 +97,8 @@ ALTER TABLE Loan ADD CONSTRAINT FKLoan357293 FOREIGN KEY (BranchBranchId) REFERE
 ALTER TABLE SavingsAccount ADD CONSTRAINT FKSavingsAcc25288 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
 ALTER TABLE Payment ADD CONSTRAINT FKPayment955503 FOREIGN KEY (LoanLoanID) REFERENCES Loan (LoanID);
 ALTER TABLE Deposit ADD CONSTRAINT FKDeposit626030 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
-ALTER TABLE Tranfer ADD CONSTRAINT FKTranfer816388 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
-ALTER TABLE Tranfer ADD CONSTRAINT FKTranfer299653 FOREIGN KEY (AccountAccountID2) REFERENCES Account (AccountID);
+ALTER TABLE Transfer ADD CONSTRAINT FKTransfer763027 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
+ALTER TABLE Transfer ADD CONSTRAINT FKTransfer353014 FOREIGN KEY (AccountAccountID2) REFERENCES Account (AccountID);
 ALTER TABLE Payment ADD CONSTRAINT FKPayment25568 FOREIGN KEY (CurrentAccountAccountID) REFERENCES CurrentAccount (AccountAccountID);
 ALTER TABLE Withdraw ADD CONSTRAINT FKWithdraw546165 FOREIGN KEY (CurrentAccountAccountID) REFERENCES CurrentAccount (AccountAccountID);
 ALTER TABLE CurrentAccount ADD CONSTRAINT FKCurrentAcc16041 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);

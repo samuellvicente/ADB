@@ -19,17 +19,17 @@
 \setcounter{secnumdepth}{0} %% no numbering
 
 \begin{document}
-\title{Advanced DataBases, First Delivery\\
+\title{Advanced DataBases C4 Group\\\
   \huge Bank Management System}
 \author{
   Samuel Lúcio Vicente, 251720
   \and
   Daniel Silva, 251702
   \and
-  Jorge Espanhol, XXXXXX
+  Jorge Marrero Camiruaga, 251438
 }
 
-\date{Politechnika Wrocławska\\C4 Group\\\today}
+\date{Politechnika Wrocławska\\today}
 
 \maketitle
 
@@ -43,7 +43,7 @@
 }
 
 \section{Short Description}
-
+This database models a bank with Accounts that can either be a SavingsAccount or a CurrentAccount. There are some operations that are permitted, Withdraw from the CurrentAccount, Transfer between accounts, Loan, Pay the loan, Deposit on Account. There are employees that work in a branch that have roles, this database tracks the history of theall the employees on every branch, and the previous roles that some particular employee has had and which branch he has working at.
 
 \section{ERD}
 \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{bms}
@@ -131,7 +131,7 @@ CREATE TABLE Deposit (
   AccountAccountID number(19) NOT NULL, 
   PRIMARY KEY (DepositID));
 
-CREATE TABLE Tranfer (
+CREATE TABLE Transfer (
   TransferID        number(19) GENERATED AS IDENTITY, 
   TransferDate      date NOT NULL, 
   Amount            number(19, 2) NOT NULL CHECK(Amount>0), 
@@ -172,9 +172,9 @@ ALTER TABLE Payment ADD CONSTRAINT FKPayment955503 FOREIGN KEY (LoanLoanID) REFE
 
 ALTER TABLE Deposit ADD CONSTRAINT FKDeposit626030 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
 
-ALTER TABLE Tranfer ADD CONSTRAINT FKTranfer816388 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
+ALTER TABLE Transfer ADD CONSTRAINT FKTranfer816388 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
 
-ALTER TABLE Tranfer ADD CONSTRAINT FKTranfer299653 FOREIGN KEY (AccountAccountID2) REFERENCES Account (AccountID);
+ALTER TABLE Transfer ADD CONSTRAINT FKTranfer299653 FOREIGN KEY (AccountAccountID2) REFERENCES Account (AccountID);
 
 ALTER TABLE Payment ADD CONSTRAINT FKPayment25568 FOREIGN KEY (CurrentAccountAccountID) REFERENCES CurrentAccount (AccountAccountID);
 
@@ -188,9 +188,6 @@ ALTER TABLE CurrentAccount ADD CONSTRAINT FKCurrentAcc16041 FOREIGN KEY (Account
 \subsection{1:Changing Query}
 \subsubsection{Description}
 There is 5 CurrentAccount in the system. This transaction doubles the amount of the account that has the biggest value in the database.
-
-\subsubsection{Input}
-\subsubsection{Output}
 
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
@@ -218,9 +215,6 @@ COMMIT
 \subsubsection{Description}
 This transaction preforms a withdraw of 100 units on the CurrentAccount with the AccountAccountID 1. To do this we must first check if the amount we want to withdraw is smaller than the CurrentAccount MaximumWithdraw, after that we update the amount and add an entry to the Withdraw ledger.
 
-\subsubsection{Input}
-\subsubsection{Output}
-
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 BEGIN TRANSACTION
@@ -235,7 +229,7 @@ SET amount =
         ELSE amount
     END
 WHERE AccountID=(
-    SELECT AccountAccountID 
+    SELECT AccountID 
     FROM CurrentAccount INNER JOIN Account 
         ON AccountID=AccountAccountID 
     WHERE AccountAccountID=1);
@@ -247,13 +241,150 @@ SET EndDate =
         ELSE null
     END
 WHERE AccountID = (
-    SELECT AccountAccountID 
+    SELECT AccountID 
     FROM CurrentAccount INNER JOIN Account 
         ON AccountID=AccountAccountID 
     WHERE AccountAccountID=1);
 
 INSERT INTO Withdraw(WithdrawDate, Amount, CurrentAccountAccountID) VALUES(CURRENT_DATE, 100, 1);
 COMMIT
+\end{lstlisting}
+
+\subsection{3:Changing Query}
+\subsubsection{Description}
+This transaction preforms a transaction between the SavingsAccount 6 and the CurrentAccount 1, it checks if the period of the SavingsAccount has passed and if so transfers the amount plus interest, if not only the amount. To do this we first add the amount to the CurrentAccount then we add a entry to the Transaction ledger and then we update the amount on the SavingsAccount
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+BEGIN TRANSACTION
+UPDATE Account 
+SET amount =     
+  CASE          
+      WHEN (
+      SELECT EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM (
+          SELECT BeginDate 
+          FROM Account INNER JOIN SavingsAccount 
+            ON AccountID=AccountAccountID 
+          WHERE AccountAccountID=7))
+        AS year FROM dual) > (
+          SELECT DurationYears 
+          FROM SavingsAccount 
+          WHERE AccountAccountID=7)
+      THEN amount + ( 
+          SELECT (amount+1)*12*DurationYears*InterestRate 
+          FROM  SavingsAccount INNER JOIN Account 
+          ON AccountID=AccountAccountID 
+          WHERE AccountAccountID=7)   
+      ELSE amount + ( 
+      SELECT amount 
+      FROM  SavingsAccount INNER JOIN Account 
+      ON AccountID=AccountAccountID 
+      WHERE AccountAccountID=7) 
+  END 
+WHERE AccountID = (
+    SELECT AccountID 
+    FROM CurrentAccount INNER JOIN Account 
+        ON AccountID=AccountAccountID 
+    WHERE AccountAccountID=1);
+
+INSERT INTO Transfer(TransferDate, Amount, AccountAccountID, AccountAccountID2) VALUES (CURRENT_DATE, (
+Select
+  CASE
+      WHEN (
+          SELECT EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM (
+              SELECT BeginDate 
+              FROM Account INNER JOIN SavingsAccount 
+                ON AccountID=AccountAccountID WHERE AccountAccountID=7)) 
+          AS year FROM dual) > (
+              SELECT DurationYears 
+              FROM SavingsAccount 
+              WHERE AccountAccountID=7)
+      THEN  amount*12*DurationYears*InterestRate
+      ELSE  amount
+  END
+FROM SavingsAccount INNER JOIN Account
+        ON AccountID=AccountAccountID
+    WHERE AccountAccountID=7), '7', '1');
+
+UPDATE Account
+SET amount = 0
+WHERE AccountID = (
+    SELECT AccountID 
+    FROM SavingsAccount INNER JOIN Account 
+        ON AccountID=AccountAccountID 
+    WHERE AccountAccountID=7);
+COMMIT
+\end{lstlisting}
+
+\subsection{4:Changing Query}
+\subsubsection{Description}
+This transaction upgrades the role of the employee that has been working as a 4 Role for the longest time and upgrades him to a 5
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+BEGIN TRANSACTION
+UPDATE RoleHistory
+	SET EndDate = CURRENT_DATE
+		WHERE EmployeeEmployeeID = (
+				SELECT EmployeeEmployeeID 
+				FROM RoleHistory
+				WHERE BeginDate = (
+          SELECT MIN(BeginDate)
+				  FROM roleHistory
+				  WHERE RoleRoleID = '4' AND EndDate = NULL)
+        AND RoleRoleID = '4' AND EndDate = NULL
+
+INSERT INTO RoleHistory VALUES('10004',CURRENT_DATE,NULL,'5','84972','16516');
+COMMIT
+\end{lstlisting}
+
+\subsection{5:Changing Query}
+\subsubsection{Description}
+This transaction doubles the amount of every Account belonging to a Portuguese or a Spanish person
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+BEGIN TRANSACTION 
+UPDATE RoleHistory 
+  SET EndDate = CURRENT_DATE 
+  WHERE EmployeeEmployeeID = (
+    SELECT EmployeeEmployeeID 
+    FROM RoleHistory 
+    WHERE BeginDate = ( 
+      SELECT MIN(BeginDate) 
+      FROM roleHistory 
+        WHERE RoleRoleID = '4' 
+          AND EndDate = NULL) 
+      AND RoleRoleID = '4' 
+      AND EndDate = NULL 
+
+INSERT INTO RoleHistory VALUES('10004',CURRENT_DATE,NULL,'5','84972','16516');
+COMMIT
+\end{lstlisting}
+
+\subsection{6:Selecting Query}
+\subsubsection{Description}
+This query selects the AccountAccountID that made the transactions with the most total value
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+Select AccountAccountID, MAX(total) as TotalTransfer
+FROM (
+	Select TransferID,
+	SUM (Amount) as total,
+	From Transfer
+	Group by AccountAccountID
+)
+\end{lstlisting}
+
+\subsection{7:Selecting Query}
+\subsubsection{Description}
+This query finds the biggest amount that a costumer has on the bank
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+SELECT MAX(SUM(amount))
+FROM Costumer INNER JOIN Account 
+  ON CostumerCostumerID = CostumerID
+GROUP BY CostumerID
 \end{lstlisting}
 
 \end{document}
