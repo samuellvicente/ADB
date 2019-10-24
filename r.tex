@@ -50,7 +50,7 @@ This database models a bank with Accounts that can either be a SavingsAccount or
 \section{Schema}
 \begin{lstlisting}[language=SQL]
 CREATE TABLE Person (
-  GovID       number(19) GENERATED AS IDENTITY, 
+  GovID       number(19), 
   Name        varchar2(255) NOT NULL, 
   PhoneNumber varchar2(255) NOT NULL UNIQUE, 
   Email       varchar2(255) NOT NULL, 
@@ -67,13 +67,14 @@ CREATE TABLE Costumer (
 CREATE TABLE Employee (
   EmployeeID  number(19) GENERATED AS IDENTITY, 
   PersonGovID number(19) NOT NULL, 
-  Bonus       number(3, 5) NOT NULL CHECK(Bonus>=0), 
+  Bonus       number(10, 5) NOT NULL CHECK(Bonus>=0), 
   SickDays    number(10) NOT NULL CHECK(SickDays<10), 
   PRIMARY KEY (EmployeeID));
 
 CREATE TABLE Account (
   AccountID          number(19) GENERATED AS IDENTITY, 
   CostumerCostumerID number(19) NOT NULL, 
+  BranchBranchId     number(19) NOT NULL, 
   Amount             number(19, 2) NOT NULL CHECK(Amount>=0), 
   BeginDate          date NOT NULL, 
   EndDate            date, 
@@ -86,11 +87,11 @@ CREATE TABLE Branch (
 
 CREATE TABLE RoleHistory (
   HistoryID          number(19) GENERATED AS IDENTITY, 
-  BeginDate          date NOT NULL, 
-  EndDate            date, 
   RoleRoleID         number(19) NOT NULL, 
   EmployeeEmployeeID number(19) NOT NULL, 
   BranchBranchId     number(19) NOT NULL, 
+  BeginDate          date NOT NULL, 
+  EndDate            date, 
   PRIMARY KEY (HistoryID));
 
 CREATE TABLE Role (
@@ -102,48 +103,48 @@ CREATE TABLE Role (
 
 CREATE TABLE Loan (
   LoanID           number(19) GENERATED AS IDENTITY, 
+  BranchBranchId   number(19) NOT NULL, 
   Amount           number(19, 2) NOT NULL CHECK(Amount>0), 
-  InterestRate     number(3, 5) NOT NULL, 
+  InterestRate     number(10, 5) NOT NULL, 
   DateOfCompletion date NOT NULL, 
   DateOfCreation   date NOT NULL, 
-  BranchBranchId   number(19) NOT NULL, 
   PRIMARY KEY (LoanID));
 
 CREATE TABLE Payment (
   PaymentID               number(19) GENERATED AS IDENTITY, 
-  PaymentDate             date NOT NULL, 
-  Amount                  number(19, 2) NOT NULL CHECK(Amount>0), 
   LoanLoanID              number(19) NOT NULL, 
   CurrentAccountAccountID number(19) NOT NULL, 
+  PaymentDate             date NOT NULL, 
+  Amount                  number(19, 2) NOT NULL CHECK(Amount>0), 
   PRIMARY KEY (PaymentID));
 
 CREATE TABLE SavingsAccount (
   AccountAccountID number(19) NOT NULL, 
-  InterestRate     number(3, 5) NOT NULL CHECK(InterestRate>0), 
+  InterestRate     number(10, 5) NOT NULL CHECK(InterestRate>0), 
   TypeOfInterest   varchar2(255) NOT NULL, 
   DurationYears    number(10) NOT NULL CHECK(DurationYears>0), 
   PRIMARY KEY (AccountAccountID));
 
 CREATE TABLE Deposit (
   DepositID        number(19) GENERATED AS IDENTITY, 
+  AccountAccountID number(19) NOT NULL, 
   DepositDate      date NOT NULL, 
   Amount           number(19, 2) NOT NULL CHECK(Amount>0), 
-  AccountAccountID number(19) NOT NULL, 
   PRIMARY KEY (DepositID));
 
 CREATE TABLE Transfer (
-  TransferID        number(19) GENERATED AS IDENTITY, 
-  TransferDate      date NOT NULL, 
-  Amount            number(19, 2) NOT NULL CHECK(Amount>0), 
-  AccountAccountID  number(19) NOT NULL, 
-  AccountAccountID2 number(19) NOT NULL, 
+  TransferID           number(19) GENERATED AS IDENTITY, 
+  AccountAccountIDFrom number(19) NOT NULL, 
+  AccountAccountIDTo   number(19) NOT NULL, 
+  TransferDate         date NOT NULL, 
+  Amount               number(19, 2) NOT NULL CHECK(Amount>0), 
   PRIMARY KEY (TransferID));
 
 CREATE TABLE Withdraw (
   WithdrawID              number(19) GENERATED AS IDENTITY, 
+  CurrentAccountAccountID number(19) NOT NULL, 
   WithdrawDate            date NOT NULL, 
   Amount                  number(19, 2) NOT NULL CHECK(Amount>0), 
-  CurrentAccountAccountID number(19) NOT NULL, 
   PRIMARY KEY (WithdrawID));
 
 CREATE TABLE CurrentAccount (
@@ -151,7 +152,6 @@ CREATE TABLE CurrentAccount (
   Name             varchar2(255) NOT NULL, 
   MaximumWithdraw  number(10), 
   PRIMARY KEY (AccountAccountID));
-
 ALTER TABLE Costumer ADD CONSTRAINT FKCostumer923053 FOREIGN KEY (PersonGovID) REFERENCES Person (GovID);
 
 ALTER TABLE Employee ADD CONSTRAINT FKEmployee249023 FOREIGN KEY (PersonGovID) REFERENCES Person (GovID);
@@ -172,15 +172,17 @@ ALTER TABLE Payment ADD CONSTRAINT FKPayment955503 FOREIGN KEY (LoanLoanID) REFE
 
 ALTER TABLE Deposit ADD CONSTRAINT FKDeposit626030 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
 
-ALTER TABLE Transfer ADD CONSTRAINT FKTranfer816388 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
+ALTER TABLE Transfer ADD CONSTRAINT FKTransfer731892 FOREIGN KEY (AccountAccountIDFrom) REFERENCES Account (AccountID);
 
-ALTER TABLE Transfer ADD CONSTRAINT FKTranfer299653 FOREIGN KEY (AccountAccountID2) REFERENCES Account (AccountID);
+ALTER TABLE Transfer ADD CONSTRAINT FKTransfer432158 FOREIGN KEY (AccountAccountIDTo) REFERENCES Account (AccountID);
 
 ALTER TABLE Payment ADD CONSTRAINT FKPayment25568 FOREIGN KEY (CurrentAccountAccountID) REFERENCES CurrentAccount (AccountAccountID);
 
 ALTER TABLE Withdraw ADD CONSTRAINT FKWithdraw546165 FOREIGN KEY (CurrentAccountAccountID) REFERENCES CurrentAccount (AccountAccountID);
 
 ALTER TABLE CurrentAccount ADD CONSTRAINT FKCurrentAcc16041 FOREIGN KEY (AccountAccountID) REFERENCES Account (AccountID);
+
+ALTER TABLE Account ADD CONSTRAINT FKAccount396299 FOREIGN KEY (BranchBranchId) REFERENCES Branch (BranchId);
 \end{lstlisting}
 
 \section{Transactions}
@@ -340,51 +342,21 @@ COMMIT
 
 \subsection{5:Changing Query}
 \subsubsection{Description}
-This transaction doubles the amount of every Account belonging to a Portuguese or a Spanish person
 
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
-BEGIN TRANSACTION 
-UPDATE RoleHistory 
-  SET EndDate = CURRENT_DATE 
-  WHERE EmployeeEmployeeID = (
-    SELECT EmployeeEmployeeID 
-    FROM RoleHistory 
-    WHERE BeginDate = ( 
-      SELECT MIN(BeginDate) 
-      FROM roleHistory 
-        WHERE RoleRoleID = '4' 
-          AND EndDate = NULL) 
-      AND RoleRoleID = '4' 
-      AND EndDate = NULL 
-
-INSERT INTO RoleHistory VALUES('10004',CURRENT_DATE,NULL,'5','84972','16516');
-COMMIT
 \end{lstlisting}
 
 \subsection{6:Selecting Query}
 \subsubsection{Description}
-This query selects the AccountAccountID that made the transactions with the most total value
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
-Select AccountAccountID, MAX(total) as TotalTransfer
-FROM (
-	Select TransferID,
-	SUM (Amount) as total,
-	From Transfer
-	Group by AccountAccountID
-)
 \end{lstlisting}
 
 \subsection{7:Selecting Query}
 \subsubsection{Description}
-This query finds the biggest amount that a costumer has on the bank
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
-SELECT MAX(SUM(amount))
-FROM Costumer INNER JOIN Account 
-  ON CostumerCostumerID = CostumerID
-GROUP BY CostumerID
 \end{lstlisting}
 
 \end{document}
