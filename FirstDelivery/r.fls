@@ -1,4 +1,4 @@
-PWD /Users/samuelvicente/Documents/IST/PWR/ADB/ADB
+PWD /Users/samuelvicente/Documents/IST/PWR/ADB/ADB/FirstDelivery
 INPUT /usr/local/texlive/2018/texmf.cnf
 INPUT /usr/local/texlive/2018/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2018/texmf-var/web2c/pdftex/pdflatex.fmt
@@ -113,10 +113,10 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT ./ER/bms3.png
-INPUT ./ER/bms3.png
+INPUT ../ER/bms.png
+INPUT ../ER/bms.png
 OUTPUT r.pdf
-INPUT ./ER/bms3.png
+INPUT ../ER/bms.png
 INPUT /usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty

@@ -1,0 +1,8 @@
+Branch Manager,4000
+Security Guard,1000
+Account Manager,2000
+IT Spetialist,3000
+Accountant,3000
+Head of Marketing,3000
+Insurance Officer,3000
+Cashier,1500
