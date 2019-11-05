@@ -113,10 +113,11 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT ./ER/bms.png
-INPUT ./ER/bms.png
+INPUT ./ER/bms3.png
+INPUT ./ER/bms3.png
 OUTPUT r.pdf
-INPUT ./ER/bms.png
+INPUT ./ER/bms3.png
+INPUT /usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
@@ -125,7 +126,6 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmmi9.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmsy9.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex9.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
-INPUT /usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT r.aux
