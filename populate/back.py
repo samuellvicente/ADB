@@ -1,8 +1,14 @@
 import random
+import math
 
+def newDate(year, month, numeroMeses):
+    newMonth=(month+numeroMeses)%12 if (month+numeroMeses)%12 != 0 else 12
+    newYear=year + (math.floor(numeroMeses/12 +1) if month>newMonth else math.floor(numeroMeses/12))
+    return (newYear, newMonth)
 phoneNumber=900000000
 govId=1111111111
 
+loanID=1
 costumerID=1
 employeeID=1
 branchID=1
@@ -68,7 +74,10 @@ with open("./resources/citiesCountries.txt", 'r', encoding='utf-8') as cities:
                     #Create the first CurrentAccount
                     branchID=random.randint(1,1252)
                     amount=random.randint(50000, 1000000)
-                    beginDate=f"TO_DATE('{random.randint(1,28)}-{random.randint(1,12)}-{random.randint(year+1,2018)}','DD-MM-YYYY')"
+                    beginDateDay=random.randint(1,28)
+                    beginDateMonth=random.randint(1,12)
+                    beginDateYear=random.randint(year+1,2018)
+                    beginDate=f"TO_DATE('{beginDateDay}-{beginDateMonth}-{beginDateYear}','DD-MM-YYYY')"
                     endDate=f"NULL"
                     print(f"INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('{costumerID}', '{branchID}', '{amount/4}', {beginDate}, {endDate});")
                     maximumWithdraw=400
@@ -84,10 +93,39 @@ with open("./resources/citiesCountries.txt", 'r', encoding='utf-8') as cities:
                     print(f"INSERT INTO Transfer(AccountAccountIDFrom, AccountAccountIDTo, TransferDate, Amount) VALUES ('{accountID-1}', '{accountID}', '{beginDate}', '{amount/2}');")
                     accountID=accountID+1
 
+                    if(random.randint(0,100)>97):
+                        #Create Loan
+                        loanAmount=random.randint(5000, 1000000)
+                        loanInterestRate=0.07
+                        loanCompletionYear=beginDateYear+random.randint(3,20)
+                        loanDateOfCompletion=f"TO_DATE('{beginDateDay}-{beginDateMonth}-{loanCompletionYear}','DD-MM-YYYY')"
+                        loanDateOfCreation=beginDate
+
+                        print(f"INSERT INTO Account(CostumerCostumerID, BranchBranchID, Amount, BeginDate, EndDate) VALUES ('{costumerID}', '{branchID}', '{loanAmount}', {beginDate}, {endDate});")
+
+                        print(f"INSERT INTO CurrentAccount(AccountAccountID, MaximumWithdraw) VALUES ('{accountID}', '{maximumWithdraw}');")
+
+                        currentYear=2019
+                        currentMonth=11
+                        currentDay=6
+
+                        loanMonthsToCurrentDate=(currentYear-beginDateYear)*12+(currentMonth-beginDateMonth)+(-1 if currentDay < beginDateDay else (0))
+
+                        loanMonthsToCompletion=(loanCompletionYear-beginDateYear)*12
+
+                        paymentAmountPerMonth=math.ceil((loanAmount/loanMonthsToCompletion)*1+loanInterestRate)
+
+                        print(f"INSERT INTO Loan(BranchBranchID, CurrentAccountAccountAccountID, Amount, InterestRate, DateOfCompletion, DateOfCreation) VALUES ('{branchID}', '{accountID}', '{loanAmount}', '{loanInterestRate}', '{loanDateOfCompletion}', '{loanDateOfCreation}');")
+                        
+                        for j in range(1,loanMonthsToCurrentDate+1):
+                            date=newDate(beginDateYear, beginDateMonth, j)
+                            paymentDate=f"TO_DATE('{beginDateDay}-{date[1]}-{date[0]}','DD-MM-YYYY')"
+
+                            print(f"INSERT INTO Payment(LoanLoanID, CurrentAccountAccountID, PaymentDate, Amount) VALUES ('{loanID}', '{accountID}', '{paymentDate}', '{paymentAmountPerMonth}')")
+                            print(f"INSERT INTO Deposit(AccountAccountID, DepositDate, Amount) VALUES ('{accountID}', '{paymentDate}','{paymentAmountPerMonth}')")
+                        
+                        loanID=loanID+1
+                        accountID=accountID+1
                     #Finish Accounts
                     costumerID=costumerID+1
                 #Finish Costumer
-
-
-
-
