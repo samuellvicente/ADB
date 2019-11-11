@@ -4136,9 +4136,9 @@ Cyrus Ñeco
 Cythia Ñeco
 Czeslaw Ñeco
 Czeslawa Ñeco
-D'Arc Ñeco
-D'Asis Ñeco
-D'Assis Ñeco
+DArc Ñeco
+DAsis Ñeco
+DAssis Ñeco
 Da Ñeco
 Daba Ñeco
 Dabi Ñeco
