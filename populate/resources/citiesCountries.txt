@@ -338,7 +338,7 @@ Saint Etienne, France
 Saint-Etienne, France
 Saint-Julien-en-Genevois, France
 Sciez, France
-Val-d'Isere, France
+Val-dIsere, France
 Villeurbanne, France
 Voiron, France
 Blotzheim, France
@@ -771,7 +771,7 @@ Gyor, Hungary
 Dunaujvaros, Hungary
 Szombathely, Hungary
 Chieti, Italy
-L'Aquila, Italy
+LAquila, Italy
 Pescara, Italy
 Genzano Di Lucania, Italy
 Matera, Italy
@@ -976,7 +976,7 @@ Bassano Del Grappa, Italy
 Castelfranco Veneto, Italy
 Cittadella, Italy
 Conegliano, Italy
-Cortina d'Ampezzo, Italy
+Cortina dAmpezzo, Italy
 Malcesine, Italy
 Mirano, Italy
 Padova, Italy
@@ -1207,7 +1207,7 @@ Esparreguera, Spain
 Esplugues de Llobregat, Spain
 Girona, Spain
 Igualada, Spain
-La Seu d'Urgell, Spain
+La Seu dUrgell, Spain
 Lleida, Spain
 Manresa, Spain
 Matadepera, Spain
