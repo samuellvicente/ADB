@@ -360,6 +360,7 @@ This transaction doubles the amount of all the accounts under the average amount
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 SET TIMING ON;
 
@@ -399,19 +400,25 @@ This transaction counts the number of SavingsAccount that have a duration bigger
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 SET TIMING ON;
-
-select count(*) 
-from savingsaccount
-where durationyears>7;
+select count(*)
+from savingsaccount inner join Account
+    on AccountAccountID = AccountID
+inner join Costumer
+    on CostumerCostumerID = CostumerID
+inner join Person
+    on PersonGovID = GovID
+where durationyears>7 and Nationality = 'Poland';
 
 update SavingsAccount
 set interestRate =
-CASE 
+CASE
     WHEN durationYears>7 THEN interestrate + 0.03
     ELSE interestrate + 0.01
 END;
+
 \end{lstlisting}
 
 \subsection{3:Changing Query}
@@ -431,6 +438,7 @@ This transaction preforms a transfer between the SavingsAccount 2 and the Curren
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 SET TIMING ON;
 
@@ -564,6 +572,7 @@ This transaction upgrades the role of the first 5000 employees to role 1.
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 SET TIMING ON;
 
@@ -606,6 +615,7 @@ This query selects the names of the persons that have money movements bigger tha
 \end{table}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 set timing on;
 
@@ -693,6 +703,7 @@ This query shows the amount that was deposited on each day of each month of each
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 SET TIMING ON;
 
@@ -719,6 +730,7 @@ This query shows the number of loans given by each branch by year, by month in y
 \subsubsection{SQL}
 \begin{lstlisting}[language=SQL]
 ALTER SYSTEM FLUSH BUFFER_CACHE;
+ALTER SYSTEM FLUSH SHARED_POOL;
 
 SET TIMING ON;
 
