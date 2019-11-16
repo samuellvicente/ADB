@@ -1,0 +1,117 @@
+alter system flush buffer_cache;
+alter system flush shared_pool;
+
+set timing on;
+
+declare 
+    costid number:=1;
+    
+begin
+
+while costid<700
+loop
+  update account 
+set amount =     
+  case          
+      when (
+      select extract(year from current_date) - extract(year from (
+          select begindate 
+          from account inner join savingsaccount 
+            on accountid=accountaccountid 
+          where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid)))
+        as year from dual) > (
+          select durationyears 
+          from savingsaccount 
+          where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid))
+      then amount + ( 
+          select (amount+1)*12*durationyears*interestrate 
+          from  savingsaccount inner join account 
+          on accountid=accountaccountid 
+          where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid))   
+      else amount + ( 
+      select amount 
+      from  savingsaccount inner join account 
+      on accountid=accountaccountid 
+      where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid)) 
+  end 
+where accountid = (
+    select accountid 
+    from currentaccount inner join account 
+        on accountid=accountaccountid 
+    where accountaccountid=(
+            select min(accountid) 
+            from account inner join currentaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid));
+
+insert into transfer(transferdate, amount, accountaccountidfrom, accountaccountidto) values (current_date, (
+select
+  case
+      when (
+          select extract(year from current_date) - extract(year from (
+              select begindate 
+              from account inner join savingsaccount 
+                on accountid=accountaccountid where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid))) 
+          as year from dual) > (
+              select durationyears 
+              from savingsaccount 
+              where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid))
+      then  amount*12*durationyears*interestrate
+      else  amount
+  end
+from savingsaccount inner join account
+        on accountid=accountaccountid
+    where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid)),(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid), (
+            select min(accountid) 
+            from account inner join currentaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid));
+
+update account
+set amount = 0
+where accountid = (
+    select accountid 
+    from savingsaccount inner join account 
+        on accountid=accountaccountid 
+    where accountaccountid=(
+            select min(accountid) 
+            from account inner join savingsaccount 
+                on accountaccountid=accountid 
+            where costumercostumerid=costid));
+costid:=costid+1;
+end loop;
+end;
+11 saving com acco
+2 current w acco

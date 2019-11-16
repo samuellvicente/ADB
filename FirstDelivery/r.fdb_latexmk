@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1573145152 "r.tex" "r.pdf" "r" 1573145154
+["pdflatex"] 1573743147 "r.tex" "r.pdf" "r" 1573743149
   "../ER/bms.png" 1573045542 559688 9afcec154295125a59776a825dbc6f0c ""
   "/usr/local/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
@@ -85,9 +85,9 @@
   "/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1523934492 2717033 f61a5287d9c22a39a74f1979fe3f905c ""
   "/usr/local/texlive/2018/texmf-var/web2c/pdftex/pdflatex.fmt" 1552948084 4220280 eb15ad0ac09bdaad1f6bf659bf5ff664 ""
   "/usr/local/texlive/2018/texmf.cnf" 1523934483 577 0b39adfd7c93507ff20c9c14c2f1a33f ""
-  "r.aux" 1573145154 2099 9db4d7e7a21432f2522c401c57b2646d ""
-  "r.tex" 1573145149 33926 3e1d9ae3f371f3dbc8f61c9e5598e627 ""
+  "r.aux" 1573743149 2100 e268fd7747c2e39015863bdbf6d38088 ""
+  "r.tex" 1573743142 34334 17533f5fe98bd937445e1793b1986f23 ""
   (generated)
+  "r.aux"
   "r.pdf"
   "r.log"
-  "r.aux"
