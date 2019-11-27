@@ -15,7 +15,7 @@ branchID=1
 accountID=1
 with open("./resources/citiesCountries.txt", 'r', encoding='utf-8') as cities:
     places=cities.read().splitlines()
-    with open("./resources/costumerNames.txt", 'r', encoding='utf-8') as costumerNames: 
+    with open("./resources/nomesBues.txt", 'r', encoding='utf-8') as costumerNames: 
         with open("./resources/employeeName.txt", 'r', encoding='utf-8') as employeeNames: 
             with open("./resources/Roles.txt", 'r', encoding='utf-8') as roles:
                 #Create Roles
