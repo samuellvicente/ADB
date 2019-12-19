@@ -136,7 +136,7 @@ END;
 \subsection{Third Improvement}
 \begin{itemize}
   \item List partition in Person based on the nationalities
-  \item Range partition in SavingsAccount based on duration years, one partition for \gt 7 and one for >7
+  \item Range partition in SavingsAccount based on duration years, one partition for values bigger than 7 and one for smaller than
 \end{itemize}
 \subsubsection{Times}
 \begin{table}[H]
@@ -316,7 +316,7 @@ END;
 
 \subsection{Fifth Improvement}
 \begin{itemize}
-  \item B-Tree index on Account based on the amount
+  \item Hash partition RoleHistory by EmployeeEmployeeID and separate them in diferent disks
 \end{itemize}
 \subsubsection{Times}
 \begin{table}[H]
@@ -333,12 +333,6 @@ lol
 lol
 \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{lol}\\
 lol
-
-\[Instict = PredatorAvoidance + PreyChasing\\
-
-PredatorAvoidance=\sum(\overrightarrow{(-(predator.x - animal.x),-(predator.y - animal.y)}\times (animal.fov - ||(-(predator.x - animal.x),(predator.y - animal.y)||) \times SF(animal, predator))\\
-PreyChasing=\sum(\overrightarrow{(prey.x - animal.x,prey.y - animal.y)}\times (||(prey.x - animal.x,prey.y - animal.y)||) \times CF(animal, prey))\\\]
-<script type="text/javascript" src="https://www.hostmath.com/Math/MathJax.js?config=OK"></script>
 
 \subsection{Sixth Improvement}
 \begin{itemize}

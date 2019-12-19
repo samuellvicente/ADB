@@ -1,0 +1,292 @@
+\documentclass[a4paper, 10pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{framed}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{blindtext}
+\usepackage{amsmath}  % for \hookrightarrow
+\usepackage{xcolor}   % for \textcolor
+\graphicspath{ {../ER/} }
+\usepackage[hmargin=2cm,vmargin=3.5cm,bmargin=2cm]{geometry}
+\usepackage{tabularx}
+
+\usepackage{titlesec}
+\newcommand{\subsectionbreak}{\clearpage}
+
+\setlist[itemize]{noitemsep, topsep=0pt}
+\setlength\parindent{0pt}
+
+\setcounter{secnumdepth}{0} %% no numbering
+
+\begin{document}
+\title{Advanced DataBases C4 Group\\\
+  \huge Bank Management System}
+\author{
+  Samuel Lúcio Vicente, 251720
+  \and
+  Daniel Silva, 251702
+  \and
+  Jorge Marrero Camiruaga, 251438
+}
+
+\date{Politechnika Wrocławska \today}
+
+\maketitle
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  frame=lrtb,
+  numbers=left,
+  columns=fullflexible,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+}
+
+\section{Active Rules}
+
+\begin{minipage}\linewidth
+
+\subsection{Rule 1: Trigger}
+
+\begin{table}[H]
+\begin{tabularx}{\linewidth}{| r | X |}
+\hline
+\textbf{Name}              & Add amount to Account when inserting Deposit row \\ \hline
+\textbf{Triggering Events} & When inserting row in deposit \\ \hline
+\textbf{Conditions}        & When inserting row in deposit \\ \hline
+\textbf{Description}       & When a deposit is registerd in the database the Account where the deposit happened must be updated to reflect its new amount\\ \hline
+\textbf{Complexity}        & $\mathcal{O}(1)$  \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+CREATE OR REPLACE TRIGGER deposit_money
+AFTER INSERT ON deposit
+REFERENCING NEW AS NEW
+FOR EACH ROW
+BEGIN
+    UPDATE ACCOUNT
+    SET ACCOUNT.amount = (ACCOUNT.amount + :NEW.amount)
+    WHERE accountid = :NEW.accountaccountid;
+END;
+\end{lstlisting}
+
+\subsubsection{Times}
+\begin{table}[H]
+\begin{tabular}{l|l|l|l|l|}
+\cline{2-5}
+\textbf{}                             & \textbf{Max} & \textbf{Min} & \textbf{Avg} & \textbf{\#}  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Off}} & 1.415         & 1.163         & 1,265          & 5            \\ \hline
+\multicolumn{1}{|l|}{\textbf{On}}  & 2.911         &  2.345         & 2,5262          & 5            \\ \hline
+\end{tabular}
+\end{table}
+\end{minipage}
+
+\begin{minipage}\linewidth
+\subsection{Rule 2: Trigger}
+
+\begin{table}[H]
+\begin{tabularx}{\linewidth}{| r | X |}
+\hline
+\textbf{Name}              & Close previous Role when assigning new one \\ \hline
+\textbf{Triggering Events} & When you add a new row in RoleHistory table \\ \hline
+\textbf{Conditions}        & Add a new row in RoleHistory table, and there is a row already assossiated with employee \\ \hline
+\textbf{Description}       & When you add a new row in RoleHistory table, we need check if the employee already has a Role, and if so, change de Null Value of the EndDate column to the current date value \\ \hline
+\textbf{Complexity}        & $\mathcal{O}(1)$  \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+CREATE OR REPLACE TRIGGER change_job
+BEFORE INSERT ON rolehistory
+REFERENCING NEW AS NEW 
+FOR EACH ROW
+BEGIN
+DBMS_OUTPUT.ENABLE; 
+DBMS_OUTPUT.ENABLE; 
+DBMS_OUTPUT.PUT_LINE( 'change_job fired' );
+    UPDATE rolehistory
+    SET enddate = current_date
+    WHERE employeeemployeeid = :NEW.employeeemployeeid AND enddate IS NULL;
+END;
+  \end{lstlisting}
+
+
+\subsubsection{Times}
+\begin{table}[H]
+\begin{tabular}{l|l|l|l|l|}
+\cline{2-5}
+\textbf{}                             & \textbf{Max} & \textbf{Min} & \textbf{Avg} & \textbf{\#}  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Off}} & 4.143         & 3.675         & 3.9066          & 5            \\ \hline
+\multicolumn{1}{|l|}{\textbf{On}}  & 16.106         & 14.073         & 15,0156          & 5            \\ \hline
+\end{tabular}
+\end{table}
+\end{minipage}
+
+\begin{minipage}\linewidth
+\subsection{Rule 3: Trigger (Constraint)}
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{| r | X |}
+\hline
+\textbf{Name}              & Verify Job \\ \hline
+\textbf{Triggering Events} & When you add a new row in RoleHistory table \\ \hline
+\textbf{Conditions}        & Add a new row in RoleHistory table\\ \hline
+\textbf{Description}       & When you add a new row in RoleHistory table we check if the job ID is valid or not\\ \hline
+\textbf{Complexity}        & $\mathcal{O}(1)$  \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+CREATE OR REPLACE TRIGGER VERIFY_JOB
+BEFORE INSERT ON ROLEHISTORY
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+BEGIN
+	DBMS_OUTPUT.ENABLE; 
+  DBMS_OUTPUT.PUT_LINE( 'verify_job fired' );
+	IF(:NEW.ROLEROLEID IN (1,2,3,4,5,6,7,8)) THEN
+    	DBMS_OUTPUT.PUT_LINE( 'Job is valid' );
+    ELSE 
+    	RAISE_APPLICATION_ERROR( -20001, 'Job is invalid' );
+    END IF;
+END;
+\end{lstlisting}
+
+\subsubsection{Times}
+\begin{table}[H]
+\begin{tabular}{l|l|l|l|l|} 
+\cline{2-5}
+\textbf{}                             & \textbf{Max} & \textbf{Min} & \textbf{Avg} & \textbf{\#}  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Off}} & 2.341         & 1.925         & 2,073          & 5            \\ \hline
+\multicolumn{1}{|l|}{\textbf{On}}  & 3.187         & 2.458         & 2,8072          & 5            \\ \hline
+\end{tabular}
+\end{table}
+\end{minipage}
+
+\begin{minipage}\linewidth
+\subsection{Execution order of triggers}
+Rule 2 and 3 have the same trigger condition.\\
+To test which one was triggered first we added a DBMS\_OUTPUT to each of them. \\
+When we tested we saw that there is no way to predict which one fired first. \\
+We tried droping them and add them in the reverse order, this changed nothing we saw the same order.
+\end{minipage}
+
+
+\begin{minipage}\linewidth
+\subsection{Rule 4: Check Constraint}
+
+\begin{table}[H]
+\begin{tabularx}{\linewidth}{| r | X |}
+\hline
+\textbf{Name}              & Trying insert a birthday date greater than current date \\ \hline
+\textbf{Triggering Events} & When you try to insert a new row in the table of Persons, where the row represents a person. \\ \hline
+\textbf{Conditions}        & The current date must be greater than the Birthday date \\ \hline
+\textbf{Description}       & When we try to insert the row, this is not inserted in the table because there are no negative ages \\ \hline
+\textbf{Complexity}        & $\mathcal{O}(1)$  \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{SQL}
+\begin{lstlisting}[language=SQL]
+  CREATE OR REPLACE TRIGGER check_birthday
+BEFORE INSERT ON person
+REFERENCING NEW AS NEW 
+FOR EACH ROW
+BEGIN
+	dbms_output.ENABLE; 
+	IF(:NEW.birthday > current_date) THEN
+    	raise_application_error( -20001, 'Birthday is bigger than Current Date' );
+  END IF;
+END;
+\end{lstlisting}
+
+\subsubsection{Times}
+\begin{table}[H]
+\begin{tabular}{l|l|l|l|l|}
+\cline{2-5}
+\textbf{}                             & \textbf{Max} & \textbf{Min} & \textbf{Avg} & \textbf{\#}  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Off}} & 3.240         & 2.652         & 2,8136          & 5            \\ \hline
+\multicolumn{1}{|l|}{\textbf{On}}  & 3.631         & 2.875         & 3,3794          & 5            \\ \hline
+\end{tabular}
+\end{table}
+\end{minipage}
+
+\begin{minipage}\linewidth
+\subsection{Rule 5: Trigger by clock (Job)}
+
+\begin{table}[H]
+\begin{tabularx}{\linewidth}{| r | X |}
+\hline
+\textbf{Name}              & Every 10 seconds first 2000 accounts get added 1 amount\\ \hline
+\textbf{Triggering Events} & Every 10 seconds\\ \hline
+\textbf{Description}       & Every 10 seconds first 2000 accounts get added 1 amount\\ \hline
+\textbf{Complexity}        & $\mathcal{O}(2000)$  \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{SQL}
+This is a time event so we used Jobs to create it.
+\begin{lstlisting}[language=SQL]
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB (
+            job_name => '"SYSTEM"."CLOCK_EVENT"',
+            job_type => 'PLSQL_BLOCK',
+            job_action => 'DECLARE
+    accid NUMBER := 1;
+BEGIN
+WHILE accid<2000
+LOOP
+UPDATE account set amount = amount + 1 where accountID = accid;
+accid:=accid+1;
+END LOOP;
+END;',
+            number_of_arguments => 0,
+            start_date => NULL,
+            repeat_interval => 'FREQ=SECONDLY;INTERVAL=10',
+            end_date => NULL,
+            enabled => FALSE,
+            auto_drop => FALSE,
+            comments => 'Every 10 seconds the first 2000 accounts get 1 amount');
+
+    DBMS_SCHEDULER.SET_ATTRIBUTE( 
+             name => '"SYSTEM"."CLOCK_EVENT"', 
+             attribute => 'logging_level', value => DBMS_SCHEDULER.LOGGING_OFF);
+  
+    DBMS_SCHEDULER.enable(
+             name => '"SYSTEM"."CLOCK_EVENT"');
+END;
+\end{lstlisting}
+To test the preformance we let it run while also updating 40000 accounts. The times displayed are measured running the following PLSQL while the job is enabled and disabled:
+\begin{lstlisting}[language=SQL]
+DECLARE
+    accid NUMBER := 1;
+BEGIN
+WHILE accid<40000
+LOOP
+
+UPDATE account set amount = amount + 1 where accountID = accid;
+
+accid:=accid+1;
+END LOOP;
+END;\end{lstlisting}
+
+\subsubsection{Times}
+\begin{table}[H]
+\begin{tabular}{l|l|l|l|l|}
+\cline{2-5}
+\textbf{}                             & \textbf{Max} & \textbf{Min} & \textbf{Avg} & \textbf{\#}  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Off}} & 15.075         & 10.932         & 13,3352          & 5            \\ \hline
+\multicolumn{1}{|l|}{\textbf{On}}  & 16.783         & 12.204         & 14,1958          & 5            \\ \hline
+\end{tabular}
+\end{table}
+\end{minipage}
+\end{document}
